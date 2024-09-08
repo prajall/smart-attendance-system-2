@@ -6,24 +6,25 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    studentId: {
+    idNumber: {
       type: String,
       unique: true,
       required: true,
     },
     email: {
       type: String,
+      unique: true,
       required: true,
     },
     phone: {
       type: String,
     },
-    faceData: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "FaceData",
-      required: true,
-      // type: String,
-    },
+    // faceEmbedding: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "FaceEmbedding",
+    //   required: true,
+    //   // type: String,
+    // },
     section: {
       // type: mongoose.Schema.Types.ObjectId,
       // ref: "Section",

@@ -2,20 +2,11 @@ import { Student } from "@/models/studentModel";
 import { Request, Response } from "express";
 
 export const createStudent = async (req: Request, res: Response) => {
-  const {
-    name,
-    studentId,
-    email,
-    phone,
-    section,
-    faceEmbedding,
-    course,
-    batch,
-  } = req.body;
+  const { name, idNumber, email, phone, section, course, batch } = req.body;
 
   try {
     const existingStudent = await Student.findOne({
-      $or: [{ studentId }, { email }],
+      $or: [{ idNumber }, { email }],
     });
     if (existingStudent) {
       return res
@@ -23,23 +14,21 @@ export const createStudent = async (req: Request, res: Response) => {
         .json({ message: "Student with this ID or email already exists" });
     }
 
-    const newStudent = new Student({
+    const newStudent = await Student.create({
       name,
-      studentId,
+      idNumber,
       email,
       phone,
       course,
       section,
       batch,
-      faceEmbedding,
     });
 
-    await newStudent.save();
+    if (!newStudent) {
+      return res.status(500).json("Error creating student");
+    }
 
-    return res.status(201).json({
-      message: "Student created successfully",
-      student: newStudent,
-    });
+    return res.status(201).json(newStudent);
   } catch (error: any) {
     return res.status(500).json({
       message: "Error creating student",

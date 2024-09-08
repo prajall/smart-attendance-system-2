@@ -2,11 +2,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
 // import permissionRoute from "@/routes/administration/permissionRoute";
-import roleRoute from "@/routes/administration/roleRoute";
 import userRoute from "@/routes/administration/userRoute";
 import attendanceRoute from "@/routes/attendanceRoute";
 import studentRoute from "@/routes/studentRoute";
-import jwt from "jsonwebtoken";
+import faceEmbeddingRoute from "@/routes/faceEmbeddingRoute";
 
 const app = express();
 
@@ -29,7 +28,9 @@ app.get("/", (req: Request, res: Response) => {
 
 // SETUP ROUTES
 app.use("/user", userRoute);
-// app.use("/permission", permissionRoute);
-app.use("/role", roleRoute);
 app.use("/attendance", attendanceRoute);
 app.use("/student", studentRoute);
+app.use("/faceEmbedding", faceEmbeddingRoute);
+
+// app.use("/permission", permissionRoute);
+// app.use("/role", roleRoute);

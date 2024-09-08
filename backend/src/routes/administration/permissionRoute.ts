@@ -1,5 +1,5 @@
+import { createPermission } from "@/controllers/administration/permissionController";
 import express from "express";
-import { createPermission } from "../controllers/administration/permissionController";
 
 const Router = express.Router();
 

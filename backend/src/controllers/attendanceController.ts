@@ -11,7 +11,7 @@ export const newAttendance = async (req: Request, res: Response) => {
     const student = await Student.findOne({ studentId });
 
     if (!student) {
-      return res.status(404).json({ message: "Student not found" });
+      return res.status(404).json("Student not found");
     }
 
     const today = new Date();
@@ -22,17 +22,17 @@ export const newAttendance = async (req: Request, res: Response) => {
       date: today,
     });
 
-    if (existingAttendance) {
-      return res
-        .status(400)
-        .json({ message: "Attendance already marked for today" });
-    }
+    //-------FOR TESTING PURPOST. DISABLE LATER---------------
+    // if (existingAttendance) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Attendance already marked for today" });
+    // }
 
-    // Step 4: Create new attendance record for the student
     const newAttendance = new Attendance({
       student: student._id,
-      // class: student.class,
-      // section: student.section,
+      course: student.course,
+      section: student.section,
       date: today,
     });
 
