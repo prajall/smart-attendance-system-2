@@ -7,16 +7,16 @@ const AttendanceSchema = new mongoose.Schema(
       ref: "Student",
       required: true,
     },
-    class: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-      required: true,
-    },
-    section: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Section",
-      required: true,
-    },
+    // class: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Class",
+    //   required: true,
+    // },
+    // section: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Section",
+    //   required: true,
+    // },
     date: {
       type: Date,
       required: true,

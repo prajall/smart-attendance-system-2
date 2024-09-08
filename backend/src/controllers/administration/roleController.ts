@@ -1,8 +1,7 @@
+import { Role } from "@/models/administration/roleModel";
+import { User } from "@/models/administration/userModel";
+import { sendUpdatedRole } from "@/routes/administration/roleRoute";
 import { Request, Response } from "express";
-import { Role } from "../models/roleModel";
-import { Permission } from "../models/permissionModel";
-import { User } from "../models/userModel";
-import { sendUpdatedRole } from "../routes/roleRoute";
 
 export const getAllRoles = async (req: Request, res: Response) => {
   const user = req.user;

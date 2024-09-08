@@ -1,11 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { Student } from "@/models/studentModel";
 import { Attendance } from "@/models/attendanceModel";
 
-const router = express.Router();
-
-// POST request to create attendance
-router.post("/attendance/create", async (req, res) => {
+// POST request to create
+export const newAttendance = async (req: Request, res: Response) => {
   const { studentId } = req.body;
 
   try {
@@ -16,11 +14,9 @@ router.post("/attendance/create", async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Step 2: Get the current date (set time to 00:00 to ensure it's only for today)
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset hours to midnight to only focus on the date part
+    today.setHours(0, 0, 0, 0);
 
-    // Step 3: Check if attendance has already been marked for today
     const existingAttendance = await Attendance.findOne({
       student: student._id,
       date: today,
@@ -35,10 +31,9 @@ router.post("/attendance/create", async (req, res) => {
     // Step 4: Create new attendance record for the student
     const newAttendance = new Attendance({
       student: student._id,
-      // class: student.class, // Assuming student has class populated
-      section: student.section, // Assuming student has section populated
-      date: today, // Date attendance was marked (today)
-      createdAt: new Date(), // Time attendance was marked
+      // class: student.class,
+      // section: student.section,
+      date: today,
     });
 
     // Step 5: Save the attendance record
@@ -54,6 +49,4 @@ router.post("/attendance/create", async (req, res) => {
       error: error.message,
     });
   }
-});
-
-module.exports = router;
+};

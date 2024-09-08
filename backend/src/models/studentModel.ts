@@ -21,14 +21,19 @@ const StudentSchema = new mongoose.Schema(
     faceData: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "FaceData",
+      required: true,
+      // type: String,
     },
     section: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Section",
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Section",
+      type: String,
     },
     course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Course",
+      // required: true,
+      type: String,
     },
     batch: {
       type: Number,

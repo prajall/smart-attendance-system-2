@@ -6,12 +6,9 @@ import {
   getAllRolesWithAdmin,
   getUserRole,
   updateRole,
-} from "../controllers/roleController";
-import {
-  adminChecker,
-  checkPermission,
-} from "../../middlewares/checkPermission";
-import { authChecker } from "../../middlewares/authChecker";
+} from "@/controllers/administration/roleController";
+import { adminChecker, checkPermission } from "@/middlewares/checkPermission";
+import { authChecker } from "@/middlewares/authChecker";
 
 const Router = express.Router();
 

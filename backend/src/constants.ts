@@ -1,1 +1,1 @@
-export const dbName = "accesscontrol";
+export const dbName = "smart-attendance";
