@@ -7,8 +7,7 @@ export const newAttendance = async (req: Request, res: Response) => {
   const { studentId } = req.body;
 
   try {
-    // Step 1: Find the student by studentId
-    const student = await Student.findOne({ studentId });
+    const student = await Student.findById(studentId);
 
     if (!student) {
       return res.status(404).json("Student not found");
@@ -36,14 +35,11 @@ export const newAttendance = async (req: Request, res: Response) => {
       date: today,
     });
 
-    // Step 5: Save the attendance record
     await newAttendance.save();
 
-    res.status(201).json({
-      message: "Attendance successfully marked",
-      attendance: newAttendance,
-    });
+    res.status(201).json(newAttendance);
   } catch (error: any) {
+    console.log(error);
     res.status(500).json({
       message: "Error marking attendance",
       error: error.message,

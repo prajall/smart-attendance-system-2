@@ -30,7 +30,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/user", userRoute);
 app.use("/attendance", attendanceRoute);
 app.use("/student", studentRoute);
-app.use("/faceEmbedding", faceEmbeddingRoute);
+app.use("/face-embedding", faceEmbeddingRoute);
 
 // app.use("/permission", permissionRoute);
 // app.use("/role", roleRoute);

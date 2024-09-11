@@ -3,17 +3,38 @@ import { Request, Response } from "express";
 import { createObjectCsvWriter } from "csv-writer";
 import path from "path";
 import fs from "fs";
+import { pipeline } from "stream";
+import { promisify } from "util";
+import { Student } from "@/models/studentModel";
+
+const pipelineAsync = promisify(pipeline);
 
 export const createFaceEmbedding = async (req: Request, res: Response) => {
   const { studentId, faceEmbedding } = req.body;
   try {
-    const newFaceEmbedding = await FaceEmbedding.create({
+    if (!studentId || !faceEmbedding) {
+      return res
+        .status(400)
+        .json({ error: "Student ID and face embedding are required" });
+    }
+
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    const existingFaceEmbedding = await FaceEmbedding.findOne({ studentId });
+    if (existingFaceEmbedding) {
+      return res
+        .status(400)
+        .json({ error: "Face embedding already exists for this student" });
+    }
+
+    const newFaceEmbedding = new FaceEmbedding({
       studentId,
       faceEmbedding,
     });
-    if (!newFaceEmbedding) {
-      return res.status(500).json("Error creating face embedding");
-    }
+    await newFaceEmbedding.save();
     res.status(201).json(newFaceEmbedding);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -25,16 +46,15 @@ export const exportFaceEmbeddingsToCSV = async (
   res: Response
 ) => {
   try {
-    // Step 1: Fetch all the face embeddings from the database
-    const faceEmbeddings = await FaceEmbedding.find().populate(
-      "studentId",
-      "faceEmbedding"
-    );
+    const faceEmbeddings = await FaceEmbedding.find();
 
-    const csvFilePath = path.join(
-      __dirname,
-      "../../exports/face_embeddings.csv"
-    );
+    const exportDir = path.join(__dirname, "../../exports");
+    const csvFilePath = path.join(exportDir, "face_embeddings.csv");
+
+    // Ensure the export directory exists
+    if (!fs.existsSync(exportDir)) {
+      fs.mkdirSync(exportDir, { recursive: true });
+    }
 
     const csvWriter = createObjectCsvWriter({
       path: csvFilePath,
@@ -44,16 +64,13 @@ export const exportFaceEmbeddingsToCSV = async (
       ],
     });
 
-    //Format the data for CSV
     const records = faceEmbeddings.map((embedding) => ({
-      studentId: embedding.studentId,
+      studentId: embedding.studentId.toString(),
       faceEmbedding: embedding.faceEmbedding.join(" "),
     }));
 
-    //Write data to the CSV file
     await csvWriter.writeRecords(records);
 
-    //Stream the file as a response
     res.setHeader("Content-Type", "text/csv");
     res.setHeader(
       "Content-Disposition",
@@ -61,11 +78,10 @@ export const exportFaceEmbeddingsToCSV = async (
     );
 
     const fileStream = fs.createReadStream(csvFilePath);
-    fileStream.pipe(res);
+    await pipelineAsync(fileStream, res);
 
-    // Delete after streaming
-    fileStream.on("end", () => {
-      fs.unlinkSync(csvFilePath);
+    fs.unlink(csvFilePath, (err) => {
+      if (err) console.error("Failed to delete CSV file:", err);
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
