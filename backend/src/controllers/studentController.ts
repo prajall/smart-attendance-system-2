@@ -36,3 +36,13 @@ export const createStudent = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAllStudents = async (req: Request, res: Response) => {
+  const { section, course, batch } = req.body;
+
+  const studentDoc = await Student.find({ section, course, batch });
+
+  if (!studentDoc) {
+    return res.status(404).json(studentDoc);
+  }
+};

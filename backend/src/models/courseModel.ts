@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const CourseSchema = new mongoose.Schema({
-  name: { type: String, required: true }, // E.g., BSc Physics, Computer Science
-  courseCode: { type: String, required: true, unique: true }, // Unique course code
+  name: { type: String, required: true },
+  courseCode: { type: String, required: true, unique: true },
   description: { type: String },
 });
 

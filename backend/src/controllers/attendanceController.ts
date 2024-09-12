@@ -6,11 +6,15 @@ import { Attendance } from "@/models/attendanceModel";
 export const newAttendance = async (req: Request, res: Response) => {
   const { studentId } = req.body;
 
+  if (!studentId) {
+    return res.status(400).json({ message: "Student ID is required" });
+  }
+
   try {
     const student = await Student.findById(studentId);
 
     if (!student) {
-      return res.status(404).json("Student not found");
+      return res.status(404).json({ message: "Student not found" });
     }
 
     const today = new Date();
@@ -21,12 +25,11 @@ export const newAttendance = async (req: Request, res: Response) => {
       date: today,
     });
 
-    //-------FOR TESTING PURPOST. DISABLE LATER---------------
-    // if (existingAttendance) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Attendance already marked for today" });
-    // }
+    if (existingAttendance) {
+      return res
+        .status(400)
+        .json({ message: "Attendance already marked for today" });
+    }
 
     const newAttendance = new Attendance({
       student: student._id,
@@ -39,7 +42,7 @@ export const newAttendance = async (req: Request, res: Response) => {
 
     res.status(201).json(newAttendance);
   } catch (error: any) {
-    console.log(error);
+    console.error("Error marking attendance:", error);
     res.status(500).json({
       message: "Error marking attendance",
       error: error.message,
