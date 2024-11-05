@@ -1,4 +1,7 @@
-import { createStudent, getAllStudents } from "@/controllers/studentController";
+import {
+  createStudent,
+  getAllStudents,
+} from "@/controllers/student.controller";
 import express from "express";
 
 const Router = express.Router();

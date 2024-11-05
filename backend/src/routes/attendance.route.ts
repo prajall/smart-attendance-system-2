@@ -1,4 +1,4 @@
-import { newAttendance } from "@/controllers/attendanceController";
+import { newAttendance } from "@/controllers/attendance.controller";
 import express from "express";
 
 const Router = express.Router();
